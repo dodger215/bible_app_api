@@ -155,6 +155,33 @@ class BibleService:
             return chapters
         else:
             return None
+    
+    def get_book_structure(self, testament_name, book_number):
+        """Get book structure with chapter numbers and verse numbers list."""
+        xpath = (
+            f"./testament[@name='{testament_name}']"
+            f"/book[@number='{book_number}']"
+        )
+
+        book = self.root.find(xpath)
+
+        if book is not None:
+            structure = {
+                "book_number": book_number,
+                "testament_name": testament_name,
+                "chapters": {}
+            }
+            for chapter in book.findall("chapter"):
+                chapter_number = int(chapter.get("number"))
+                verse_count = len(chapter.findall("verse"))
+                verse_numbers = [int(verse.get("number")) for verse in chapter.findall("verse")]
+                structure["chapters"][chapter_number] = {
+                    "verse_count": verse_count,
+                    "verses": verse_numbers
+                }
+            return structure
+        else:
+            return None
         
 
 

@@ -35,6 +35,23 @@ async def get_book_names():
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/get_book_structure", status_code=status.HTTP_200_OK)
+async def get_book_structure(testament_name: str, book_number: int):
+    try:
+        structure = bible_service.get_book_structure(testament_name, book_number)
+        if structure is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Book not found for testament '{testament_name}' and book number {book_number}"
+            )
+        return make_pretty_response(structure)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
 @router.post("/generate-questions-and-answers-for-verse", status_code=status.HTTP_200_OK)
 async def generate_questions_and_answers_for_verse(
     request: Request,
