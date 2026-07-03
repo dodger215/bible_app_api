@@ -41,7 +41,7 @@ Expected JSON format:
       "index": 1,
       "question": "Who spoke to Moses?",
       "options": ["God", "Moses", "Aaron", "Pharaoh"],
-      "answer": "God spoke to Moses."
+      "answer": "Moses."
     }}
   ]
 }}"""
