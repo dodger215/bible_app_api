@@ -1,0 +1,14 @@
+# Ignore local environment file from Docker build context
+.env
+
+# Ignore Python artifacts
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+build/
+dist/
+*.egg-info/

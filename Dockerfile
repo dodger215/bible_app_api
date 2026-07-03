@@ -9,7 +9,6 @@ WORKDIR /app
 COPY pyproject.toml /app/pyproject.toml
 COPY app /app/app
 COPY source /app/source
-COPY .env /app/.env
 
 # Install system build deps for packages like lxml
 RUN apt-get update \
