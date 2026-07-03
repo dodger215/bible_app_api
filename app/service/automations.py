@@ -19,8 +19,20 @@ class AutomationService:
     def prompt(self, **kwargs):
         text = self.normalize_scripture_text(kwargs.get("text", ""))
         number = kwargs.get("number", 1)
+        level = kwargs.get("level", "medium").lower()
+
+        # Map difficulty levels to descriptions
+        level_descriptions = {
+            "easy": "Create simple questions focused on direct factual recall from the text.",
+            "medium": "Create balanced questions that test both comprehension and basic interpretation.",
+            "hard": "Create challenging questions that require deep analysis, inference, and critical thinking about the passage."
+        }
+        level_description = level_descriptions.get(level, level_descriptions["medium"])
 
         prompt = f"""You are a Bible study assistant. Based on the scripture passage provided below, generate exactly {number} unique questions and their corresponding answers.
+
+Difficulty Level: {level.capitalize()}
+{level_description}
 
 Scripture:
 {text}
@@ -30,6 +42,7 @@ Instructions:
 - Avoid duplicate or overly similar questions.
 - Include a mix of recall, comprehension, and application questions when appropriate.
 - Answers must be accurate, concise, and based solely on the provided scripture.
+- The answer should be the same as one of the correct multiple options.
 - Return only valid JSON without any additional text, explanations, or markdown.
 - Do not wrap the JSON in markdown code fences.
 
@@ -41,7 +54,7 @@ Expected JSON format:
       "index": 1,
       "question": "Who spoke to Moses?",
       "options": ["God", "Moses", "Aaron", "Pharaoh"],
-      "answer": "Moses."
+      "answer": "God"
     }}
   ]
 }}"""
@@ -86,6 +99,7 @@ Expected JSON format:
         start_verse_number = kwargs.get("start_verse_number")
         end_verse_number = kwargs.get("end_verse_number")
         number_of_questions = kwargs.get("number_of_questions", 1)
+        level = kwargs.get("level", "medium")
 
         verse_text = self.bible_service.get_range_of_verses(
             testament_name, book_number, chapter_number, start_verse_number, end_verse_number
@@ -94,7 +108,7 @@ Expected JSON format:
         if verse_text is None:
             return {"error": "Verse not found."}
 
-        prompt = self.prompt(text=verse_text, number=number_of_questions)
+        prompt = self.prompt(text=verse_text, number=number_of_questions, level=level)
         response = generate_response(prompt)
         return self.parse_response(response)
 
@@ -103,6 +117,7 @@ Expected JSON format:
         book_number = kwargs.get("book_number")
         chapter_number = kwargs.get("chapter_number")
         number_of_questions = kwargs.get("number_of_questions", 1)
+        level = kwargs.get("level", "medium")
 
         chapter_text = self.bible_service.get_chapter(
             testament_name, book_number, chapter_number
@@ -111,7 +126,7 @@ Expected JSON format:
         if chapter_text is None:
             return {"error": "Chapter not found."}
 
-        prompt = self.prompt(text=chapter_text, number=number_of_questions)
+        prompt = self.prompt(text=chapter_text, number=number_of_questions, level=level)
         response = generate_response(prompt)
         return self.parse_response(response)
 
@@ -119,12 +134,13 @@ Expected JSON format:
         testament_name = kwargs.get("testament_name")
         book_number = kwargs.get("book_number")
         number_of_questions = kwargs.get("number_of_questions", 1)
+        level = kwargs.get("level", "medium")
 
         book_text = self.bible_service.get_book(testament_name, book_number)
 
         if book_text is None:
             return {"error": "Book not found."}
 
-        prompt = self.prompt(text=book_text, number=number_of_questions)
+        prompt = self.prompt(text=book_text, number=number_of_questions, level=level)
         response = generate_response(prompt)
         return self.parse_response(response)

@@ -60,7 +60,8 @@ async def generate_questions_and_answers_for_verse(
     chapter_number: int,
     start_verse_number: int,
     end_verse_number: int,
-    number_of_questions: int = 1
+    number_of_questions: int = 1,
+    level: str = "medium"
 ):
     try:
         response = automation_service.generate_questions_and_answers_for_verse(
@@ -69,7 +70,8 @@ async def generate_questions_and_answers_for_verse(
             chapter_number=chapter_number,
             start_verse_number=start_verse_number,
             end_verse_number=end_verse_number,
-            number_of_questions=number_of_questions
+            number_of_questions=number_of_questions,
+            level=level
         )
         return make_pretty_response(response)
     except Exception as e:
@@ -82,14 +84,16 @@ async def generate_questions_and_answers_for_chapter(
     testament_name: str,
     book_number: int,
     chapter_number: int,
-    number_of_questions: int = 1
+    number_of_questions: int = 1,
+    level: str = "medium"
 ):
     try:
         response = automation_service.generate_questions_and_answers_for_chapter(
             testament_name=testament_name,
             book_number=book_number,
             chapter_number=chapter_number,
-            number_of_questions=number_of_questions
+            number_of_questions=number_of_questions,
+            level=level
         )
         return make_pretty_response(response)
     except Exception as e:
@@ -101,13 +105,15 @@ async def generate_questions_and_answers_for_book(
     request: Request,
     testament_name: str,
     book_number: int,
-    number_of_questions: int = 1
+    number_of_questions: int = 1,
+    level: str = "medium"
 ):
     try:
         response = automation_service.generate_questions_and_answers_for_book(
             testament_name=testament_name,
             book_number=book_number,
-            number_of_questions=number_of_questions
+            number_of_questions=number_of_questions,
+            level=level
         )
         return make_pretty_response(response)
     except Exception as e:
